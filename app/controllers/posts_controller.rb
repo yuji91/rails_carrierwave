@@ -1,25 +1,19 @@
 class PostsController < ApplicationController
-  before_action :set_post, only: [:show, :edit, :update, :destroy]
+  before_action :set_post, only: %i[show edit update destroy]
+  before_action :page_back, only: :create, if: -> { params[:commit] == 'Back' }
 
-  # GET /posts
   def index
     @posts = Post.all
   end
 
-  # GET /posts/1
-  def show
-  end
+  def show; end
 
-  # GET /posts/new
   def new
     @post = Post.new
   end
 
-  # GET /posts/1/edit
-  def edit
-  end
+  def edit; end
 
-  # POST /posts
   def create
     @post = Post.new(post_params)
 
@@ -30,7 +24,6 @@ class PostsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /posts/1
   def update
     if @post.update(post_params)
       redirect_to @post, notice: 'Post was successfully updated.'
@@ -39,20 +32,28 @@ class PostsController < ApplicationController
     end
   end
 
-  # DELETE /posts/1
   def destroy
     @post.destroy
     redirect_to posts_url, notice: 'Post was successfully destroyed.'
   end
 
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_post
-      @post = Post.find(params[:id])
-    end
+  def confirm
+    @post = Post.new(post_params)
+    render :new if @post.invalid?
+  end
 
-    # Only allow a trusted parameter "white list" through.
-    def post_params
-      params.require(:post).permit(:title)
-    end
+  private
+
+  def set_post
+    @post = Post.find(params[:id])
+  end
+
+  def post_params
+    params.require(:post).permit(:title)
+  end
+
+  def page_back
+    @post = Post.new(post_params)
+    render :new
+  end
 end
