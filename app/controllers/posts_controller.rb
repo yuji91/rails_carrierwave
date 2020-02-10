@@ -45,7 +45,11 @@ class PostsController < ApplicationController
   def edit_confirm
     set_post
     @post.assign_attributes(post_params)
-    render :edit if @post.invalid? # falseのときはrenderでconfirmに返せる
+    if @post.valid?
+      render :confirm
+    else
+      render :edit
+    end
   end
 
   private
@@ -66,6 +70,8 @@ class PostsController < ApplicationController
     when 'update'
       @post.assign_attributes(post_params)
       render :edit
+    else
+      render status: 500
     end
   end
 end
