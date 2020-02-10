@@ -42,6 +42,12 @@ class PostsController < ApplicationController
     render :new if @post.invalid?
   end
 
+  def edit_confirm
+    @post = Post.find(params[:id])
+    @post.assin_attributes(post_params)
+    render :edit if @post.invalid?
+  end
+
   private
 
   def set_post
