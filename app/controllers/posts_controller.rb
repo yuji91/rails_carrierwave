@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
   before_action :set_post, only: %i[show edit update destroy]
-  before_action :page_back, only: :create, if: -> { params[:commit] == 'Back' }
+  before_action :page_back, only: %i[create update], if: -> { params[:commit] == 'Back' }
 
   def index
     @posts = Post.all
@@ -43,9 +43,9 @@ class PostsController < ApplicationController
   end
 
   def edit_confirm
-    @post = Post.find(params[:id])
+    set_post
     @post.assign_attributes(post_params)
-    render :edit if @post.invalid?
+    render :edit if @post.invalid? # falseのときはrenderでconfirmに返せる
   end
 
   private
@@ -59,7 +59,13 @@ class PostsController < ApplicationController
   end
 
   def page_back
-    @post = Post.new(post_params)
-    render :new
+    case action_name
+    when 'create'
+      @post = Post.new(post_params)
+      render :new
+    when 'update'
+      @post.assign_attributes(post_params)
+      render :edit
+    end
   end
 end

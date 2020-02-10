@@ -4,11 +4,16 @@ module PostsHelper
     when 'new'
       confirm_posts_path
     when 'edit'
-      edit_confirm_post_path(params[:id]) if action_name == 'edit'
+      edit_confirm_post_path(params[:id])
     end
   end
 
   def confirmed_path
-    posts_path
+    case action_name
+    when 'confirm'
+      posts_path
+    when 'edit_confirm'
+      post_path(params[:id])
+    end
   end
 end
