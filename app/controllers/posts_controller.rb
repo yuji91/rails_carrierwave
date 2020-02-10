@@ -38,8 +38,15 @@ class PostsController < ApplicationController
   end
 
   def confirm
-    @post = Post.new(post_params)
-    render :new if @post.invalid?
+    case params[:commit]
+    when 'Create Post'
+      @post = Post.new(post_params)
+      render :new if @post.invalid?
+    when 'Update Post'
+      raise
+    else
+      raise
+    end
   end
 
   private
