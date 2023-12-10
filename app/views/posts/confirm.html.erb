@@ -1,0 +1,11 @@
+<h1>Confirm Post</h1>
+<%= form_with model: @post, url: confirmed_path, local: true do |f| %>
+  <div class='field'>
+    <%= f.label :title %>
+    <%= f.text_field :title, readonly: true %>
+  </div>
+  <div class='actions'>
+    <%= f.submit 'Submit' %>
+    <%= f.submit 'Back' %>
+  </div>
+<% end %>
